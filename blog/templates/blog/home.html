@@ -1,0 +1,12 @@
+{% extends "blog/base.html" %}
+{% block content %}
+    <div class="container">
+        {% for post in posts %}
+            <div class="container mt-5 mx-auto shadow-lg border border-primary rounded">
+                <h1>{{ post.title }}</h1>
+                <p>By {{post.author}} on {{post.date_posted}} </p>
+                <p> {{post.content}} </p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
