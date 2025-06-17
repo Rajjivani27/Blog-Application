@@ -1,0 +1,44 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container md-5">
+    <form class="col-6 mx-auto card p-3 shadow-lg bg-steel" method="post">
+        {% csrf_token %}
+        <h2> Register User </h2>
+        <hr>
+
+        <div class="blog mb-3">
+            <label for="username" class="form-label text">Username</label>
+            <input name="username" required type="text" class="form-control">
+        </div>
+
+        <div class="blog mb-3">
+            <label for="email" class="form-label text">Email</label>
+            <input name="email" required type="email" class="form-control">
+        </div>
+
+        <div class="blog mb-3">
+            <label for="phone_number" class="form-label text">Phone Number</label>
+            <input name="phone_number" required type="number" class="form-control">
+        </div>
+
+        <div class="blog mb-3">
+            <label for="dob" class="form-label text">Date Of Birth</label>
+            <input name="dob" required type="date" class="form-control">
+        </div>
+
+        <div class="blog mb-3">
+            <label for="bio" class="form-label text">Bio</label>
+            <input name="bio" type="text" class="form-control">
+        </div>
+
+        <div class="blog mb-3">
+            <label for="profile_pic" class="form-label text">Profile Pic</label>
+            <input name="profile_pic" type="file" class="form-control">
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}
