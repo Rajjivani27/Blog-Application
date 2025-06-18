@@ -7,5 +7,9 @@ from django.conf import settings
 urlpatterns = [
     path('home/',home,name="blog-home"),
     path('about/',about,name="blog-about"),
-    path('register/',register,name="blog-register")
-] + static(settings.STATIC_URL,document_root = settings.STATIC_ROOT)
+    path('login/',login_page,name="blog-login"),
+    path('register/',register_page,name="blog-register"),
+    path('logout/',logoutView,name="blog-logout")
+] + static(settings.STATIC_URL,document_root = settings.STATIC_ROOT) 
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
