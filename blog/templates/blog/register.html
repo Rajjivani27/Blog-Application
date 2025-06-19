@@ -1,99 +1,25 @@
 {% extends "blog/base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-  <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-  </symbol>
-  <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
-    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-  </symbol>
-  <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-  </symbol>
-</svg>
 
-<div class="container md-5">
-    <form class="row mx-auto p-3 shadow-lg bg-steel" method="post" enctype="multipart/form-data">
+<div class="content-section">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <h2 class="text"> Register User </h2>
-        <hr>
-        
-        {% if messages %}
-            {% for message in messages %}
-                {% if message.tags == 'error' %}
-                    <div class="alert alert-danger d-flex align-items-center" role="alert">
-                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-                {% else %}
-                    <div class="alert alert-{{ message.tags }} d-flex align-items-center" role="alert">
-                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
-                {% endif %}
-                        {{message}}
-                    </div>
-            {% endfor %}
-        {% endif %}
-
-        <div class="col-md-6">
-
-            <div class="blog mb-3">
-                <label for="first_name" class="form-label text">First Name</label>
-                <input name="first_name" required type="text" class="form-control">
-            </div>
-
-            <div class="blog mb-3">
-                <label for="last_name" class="form-label text">Last Name</label>
-                <input name="last_name" required type="text" class="form-control">
-            </div>
-
-            <div class="blog mb-3">
-                <label for="username" class="form-label text">Username</label>
-                <input name="username" required type="text" class="form-control">
-            </div>
-
-            <div class="blog mb-3">
-                <label for="email" class="form-label text">Email</label>
-                <input name="email" required type="email" class="form-control">
-            </div>
-
-            <div class="blog mb-3">
-                <label for="password" class="form-label text">Password</label>
-                <input name="password" required type="password" class="form-control">
-            </div>
-        
-        </div>
-        
-        <div class="col-md-6">
-
-            <div class="blog mb-3">
-                <label for="phone_number" class="form-label text">Phone Number</label>
-                <input name="phone_number" required type="number" class="form-control">
-            </div>
-
-            <div class="blog mb-3">
-                <label for="dob" class="form-label text">Date Of Birth</label>
-                <input name="dob" required type="date" class="form-control">
-            </div>
-
-            <div class="blog mb-3">
-                <label for="bio" class="form-label text">Bio</label>
-                <input name="bio" type="text" class="form-control">
-            </div>
-
-            <div class="blog mb-3">
-                <label for="profile_pic" class="form-label text">Profile Pic</label>
-                <input name="profile_pic" type="file" accept="image/*" class="form-control">
-            </div>
-
-        </div>
-
-        <hr>
-        <p class="text"> Already have account? <a class="text" href="{% url 'blog-login' %}">Login</a></p>
-
-        <div class="col-md-12">
-            <button type="submit" class="btn btn-success" style="width: 100%;"> Register </button>
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Join Today</legend>
+            {{ form | crispy }}
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-success" type="submit">Sign Up</button>
         </div>
     </form>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Already have An account? <a href="{% url 'blog-login' %}">Sign In</a>
+        </small>
+    </div>
 </div>
 
 {% endblock %}

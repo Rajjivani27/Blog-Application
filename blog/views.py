@@ -4,56 +4,26 @@ from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
+from .forms import UserRegisterForm
+from django.contrib.auth.forms import UserCreationForm
 
 def register_page(request):
     if request.method == "POST":
-        data = request.POST
+        form = UserRegisterForm(request.POST,request.FILES)
 
-        first_name = data.get('first_name')
-        last_name = data.get('last_name')
-        username = data.get('username')
-        email = data.get('email')
-        password = data.get('password')
-        phone_number = data.get('phone_number')
-        dob = data.get('dob')
-        bio = data.get('bio')
-        profile_pic = request.FILES.get('profile_pic')
-
-        user1 = CustomUser.objects.filter(username = username)
-        user2 = CustomUser.objects.filter(email = email)
-        user3 = CustomUser.objects.filter(phone_number = phone_number)
-
-        if user1.exists():
-            messages.error(request,"Username already exist!! Please enter another username")
-            return redirect('/blog/register/')
+        if form.is_valid():
+            print("Valid")
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request,f'Account Created for {username}!')
+            return redirect('/blog/home/')
+        else:
+            print("Not Validating")
         
-        elif user2.exists():
-            messages.error(request,"Email already used by another User!!")
-            return redirect('/blog/register/')
-        
-        elif user3.exists():
-            messages.error(request,"Phone number already used by another User!!")
-            return redirect('/blog/register/')
+    else:
+        form = UserRegisterForm()
 
-
-        user = CustomUser.objects.create(
-            first_name = first_name,
-            last_name = last_name,
-            username = username,
-            email = email,
-            phone_number = phone_number,
-            dob = dob,
-            user_bio = bio,
-            profile_pic = profile_pic
-        )
-
-        user.set_password(password)
-        user.save()
-
-        messages.success(request,"Account Created Succesfully! Please Log in Now")
-
-
-    return render(request,'blog/register.html',{'title' : 'Register'})
+    return render(request,'blog/register.html',{'form':form,'title':'Register'})
 
 def login_page(request):
     if request.method == "POST":
