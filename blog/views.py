@@ -61,6 +61,10 @@ def home(request):
 def about(request):
     return render(request,'blog/about.html',{'title':'About'})
 
+@login_required(login_url='blog-login')
+def profile(request):
+    return render(request,'blog/profile.html',{'title' : 'Profile'})
+
 def logoutView(request):
     logout(request)
     return redirect('/blog/login/')
