@@ -4,8 +4,8 @@ from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
-from .forms import UserRegisterForm
-from django.contrib.auth.forms import UserCreationForm
+from .forms import UserRegisterForm,UserUpdateForm
+from django.contrib.auth.forms import UserCreationForm 
 
 def register_page(request):
     if request.method == "POST":
@@ -63,7 +63,20 @@ def about(request):
 
 @login_required(login_url='blog-login')
 def profile(request):
-    return render(request,'blog/profile.html',{'title' : 'Profile'})
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
+
+        if u_form.is_valid():
+            u_form.save()
+            messages.success(request,'Your account has been updated successfully!')
+            return redirect('blog-profile')
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+    context = {
+        'u_form' : u_form,
+        'title' : 'Profile'
+    }
+    return render(request,'blog/profile.html',context)
 
 def logoutView(request):
     logout(request)
