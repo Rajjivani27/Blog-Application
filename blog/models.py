@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .manager import UserManager
 from django.utils import timezone
+from PIL import Image
 # Create your models here.
 
 class CustomUser(AbstractUser):
@@ -17,6 +18,18 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+    def save(self):
+        super().save()
+
+        img = Image.open(self.profile_pic.path)
+
+        if img.height > 300 or img.width > 300:
+            output_size = (300,300)
+            img.thumbnail(output_size)
+            img.save(self.profile_pic.path)
+
+
 
 class Posts(models.Model):
     title = models.CharField(max_length=50)
