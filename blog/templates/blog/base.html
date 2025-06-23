@@ -33,7 +33,8 @@
                 
                 {% if request.user.is_authenticated %}'
                     <div class="ml-auto navbar-nav">
-                        <a class="nav-item nav-link" href="{% url 'blog-profile' %}">Profile</a>
+                        <a class="nav-item nav-link" href="{% url 'post-create' %}">New Post</a>
+                        <a class="nav-item nav-link" href="{% url 'blog-profile' %}">{{ user.username }}</a>
                         <a href="{% url 'blog-logout' %}" class="btn btn-danger">Logout</a>
                     </div>
                 {% else %}

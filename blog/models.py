@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from .manager import UserManager
 from django.utils import timezone
 from PIL import Image
+from django.urls import reverse
 # Create your models here.
 
 class CustomUser(AbstractUser):
@@ -19,8 +20,8 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
     
-    def save(self):
-        super().save()
+    def save(self,*args, **kwargs):
+        super().save(*args, **kwargs)
 
         img = Image.open(self.profile_pic.path)
 
