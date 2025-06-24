@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.core.paginator import Paginator
 from .models import *
 from django.db.models import Q
@@ -59,6 +59,16 @@ class PostListView(ListView):
     context_object_name = 'posts'
     ordering = ['-date_posted']
     paginate_by = 5
+
+class UserPostListView(ListView):
+    model = Posts
+    template_name = 'blog/user_posts.html' #<app>/<model>_<viewtype>.html , ex:- blog/post_list.html
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        user = get_object_or_404(CustomUser,username = self.kwargs.get('username'))
+        return Posts.objects.filter(author = user).order_by('-date_posted')
 
 class PostDetailView(DetailView):
     model = Posts
