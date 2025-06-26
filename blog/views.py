@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
+from django.http import HttpResponse
 from django.core.paginator import Paginator
 from .models import *
 from django.db.models import Q
@@ -9,6 +10,10 @@ from .forms import UserRegisterForm,UserUpdateForm
 from django.contrib.auth.forms import UserCreationForm 
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
+from .utils import send_verification_email
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
+from .tokens import email_verification_token
 
 #View for Registering new user
 def register_page(request):
@@ -16,10 +21,13 @@ def register_page(request):
         form = UserRegisterForm(request.POST,request.FILES)
 
         if form.is_valid():
-            print("Valid")
-            form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request,f'Account Created for {username}!')
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+
+            send_verification_email(user,request)
+            # username = form.cleaned_data.get('username')
+            # messages.success(request,f'Account Created for {username}!')
             return redirect('/blog/home/')
         else:
             print("Not Validating")
@@ -133,6 +141,24 @@ def profile(request):
 def logoutView(request):
     logout(request)
     return redirect('/blog/login/')
+
+def verify_email_done(request):
+    return render(request,'blog/verify_email_done.html')
+
+def verify_email_confirm(request,uidb64,token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=uid)
+    except(TypeError,ValueError,OverflowError,CustomUser.DoesNotExist):
+        user = None
+
+    if user and email_verification_token.check_token(user,token):
+        user.is_active = True
+        user.save()
+
+        return render(request,'blog/verify_email_confirm.html')
+    else:
+        return HttpResponse("Invalid or expired verification link")
 
 
 

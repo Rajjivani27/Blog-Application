@@ -1,0 +1,7 @@
+{% extends "blog/base.html" %}
+{% block content %}
+    <div class="alert alert-info">
+        Your email has benn verified successfully. Please Sign In now.
+        <a href="{% url 'blog-login' %}">Sign In</a>
+    </div>
+{% endblock content %}

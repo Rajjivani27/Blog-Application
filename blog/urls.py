@@ -11,6 +11,8 @@ urlpatterns = [
     path('about/',about,name="blog-about"),
     path('login/',auth_views.LoginView.as_view(template_name = "blog/login.html"),name="blog-login"),
     path('register/',register_page,name="blog-register"),
+    path('verify-email-done/',verify_email_done,name="verify_email_done"),
+    path('verify-email-confirm/',verify_email_confirm,name="verify_email_confirm"),
     path('post/new/',PostCreateView.as_view(),name='post-create'),
     path('post/<int:pk>/update/',PostUpdateView.as_view(),name='post-update'),
     path('post/<int:pk>/',PostDetailView.as_view(),name='post-detail'),
