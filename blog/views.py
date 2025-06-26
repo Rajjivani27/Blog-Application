@@ -37,30 +37,6 @@ def register_page(request):
 
     return render(request,'blog/register.html',{'form':form,'title':'Register'})
 
-#View for Login into existing account through email and account
-def login_page(request):
-    if request.method == "POST":
-        data = request.POST
-
-        email = data.get('email')
-        password = data.get('password')
-
-        user = CustomUser.objects.filter(email = email)
-        if not user.exists():
-            messages.error(request,'Invalid Email!!')
-            return redirect('/blog/login/')
-        else:
-            user = authenticate(request,email = email,password=password)
-
-            if user is None:
-                messages.error(request,'Invalid Password!!')
-                return redirect('/blog/login/')
-            else:
-                login(request,user)
-                return redirect('/blog/home/')
-
-    return render(request,'blog/login.html',{'title' : 'Login'})
-
 class PostListView(ListView):
     model = Posts
     template_name = 'blog/home.html' #<app>/<model>_<viewtype>.html , ex:- blog/post_list.html
