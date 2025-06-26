@@ -10,7 +10,7 @@ def send_verification_email(user,request):
     token = email_verification_token.make_token(user)
 
     verification_link = request.build_absolute_uri(
-        reverse('verify_email',kwargs={'uidb64':uid,'token':token})
+        reverse('verify_email_confirm',kwargs={'uidb64':uid,'token':token})
     )
 
     subject = "Verification Email"

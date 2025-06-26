@@ -28,7 +28,7 @@ def register_page(request):
             send_verification_email(user,request)
             # username = form.cleaned_data.get('username')
             # messages.success(request,f'Account Created for {username}!')
-            return redirect('/blog/home/')
+            return redirect("/blog/verify-email-done/")
         else:
             print("Not Validating")
         
