@@ -4,22 +4,20 @@ from .models import CustomUser
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
-    phone_number = forms.CharField()
     profile_pic = forms.ImageField()
     user_bio = forms.CharField()
     dob = forms.DateField()
 
     class Meta:
         model = CustomUser
-        fields = ['username','email','password1','password2','phone_number','profile_pic','user_bio','dob']
+        fields = ['username','email','password1','password2','profile_pic','user_bio','dob']
 
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()
-    phone_number = forms.CharField()
     profile_pic = forms.ImageField()
     user_bio = forms.CharField()
     dob = forms.DateField()
 
     class Meta:
         model = CustomUser
-        fields = ['username','email','phone_number','profile_pic','user_bio','dob']
+        fields = ['username','email','profile_pic','user_bio','dob']

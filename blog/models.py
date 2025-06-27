@@ -8,7 +8,6 @@ from django.urls import reverse
 
 class CustomUser(AbstractUser):
     email = models.EmailField(max_length=50,unique=True)
-    phone_number = models.CharField(max_length=30,unique=True)
     profile_pic = models.ImageField(default='default.jpg')
     user_bio = models.CharField(max_length=50,default=' ')
     dob = models.DateField(default="2000-01-01")
