@@ -128,13 +128,24 @@ class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
 class CommentDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
     model = Comments
 
-    success_url = "post-detail"
+    def get_success_url(self):
+        post = self.object.post
+        return reverse('post-detail',kwargs={'pk':post.pk})
 
     def test_func(self):
         comment = self.get_object()
         if self.request.user == comment.author:
+            print("Yes Authorized")
             return True
+        
+        print("No Not Authorized")
         return False
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        post = self.object.post
+        context['post'] = post
+        return context
     
 
 def about(request):
