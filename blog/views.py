@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
-from .forms import UserRegisterForm,UserUpdateForm
+from .forms import UserRegisterForm,UserUpdateForm,CommentForm
 from django.contrib.auth.forms import UserCreationForm 
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
@@ -64,6 +64,30 @@ class UserPostListView(ListView):
 class PostDetailView(DetailView):
     model = Posts
 
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        post = self.object
+        comments = Comments.objects.filter(post = post)
+        context['comments'] = comments
+        context['form'] = CommentForm
+        return context
+    
+    def post(self,request,*args,**kwargs):
+        self.object = self.get_object()
+        if request.method == "POST":
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit = False)
+                comment.post = self.object
+                comment.author = request.user
+                comment.save()
+                return redirect('post-detail',pk=self.object.pk)
+        else:
+            form = CommentForm()
+        
+        context = self.get_context_data(form=form)
+        return self.render_to_response(context)
+
 
 class PostCreateView(LoginRequiredMixin,CreateView):
     model = Posts
@@ -100,6 +124,18 @@ class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
         if self.request.user == post.author:
             return True
         return False
+    
+class CommentDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
+    model = Comments
+
+    success_url = "post-detail"
+
+    def test_func(self):
+        comment = self.get_object()
+        if self.request.user == comment.author:
+            return True
+        return False
+    
 
 def about(request):
     return render(request,'blog/about.html',{'title':'About'})

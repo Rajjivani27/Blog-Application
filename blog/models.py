@@ -39,3 +39,12 @@ class Posts(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Comments(models.Model):
+    post = models.ForeignKey(Posts,on_delete=models.CASCADE)
+    author = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    content = models.CharField()
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f'comment done on {self.post} by {self.author}'

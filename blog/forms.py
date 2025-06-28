@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+from .models import CustomUser,Comments
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -21,3 +21,14 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['username','email','profile_pic','user_bio','dob']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comments
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'rows':2,
+                'placeholder':'Write a comment...'
+            })
+        }

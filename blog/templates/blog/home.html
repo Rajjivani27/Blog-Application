@@ -2,17 +2,26 @@
 {% block content %}
 
 {% for post in posts %}
-    <article class="media content-section d-flex align-items-start">
-        <img class="rounded-circle article-img" src="{{ post.author.profile_pic.url }}">
-        <div class="media-body">
-            <div class="article-metadata">
-                <a class="mr-2" href="{% url 'user-posts' post.author %}"> {{post.author}} </a>
-                <small class="text-muted"> {{post.date_posted | date:"F d ,Y"}} </small>
+    <article class="media content-section d-flex">
+        <div class="row">
+            <div class="d-flex">
+                <img class="rounded-circle article-img" src="{{ post.author.profile_pic.url }}">
+                <div class="media-body">
+                    <div class="article-metadata">
+                        <a class="mr-2" href="{% url 'user-posts' post.author %}"> {{post.author}} </a>
+                        <small class="text-muted"> {{post.date_posted | date:"F d ,Y"}} </small>
+                    </div>
+                    <h2><a class="article-title" href="{% url 'post-detail' post.id %}"> {{ post.title }} </a></h2>
+                    <p class="article-content"> {{ post.content }} </p>
+                </div>
             </div>
-            <h2><a class="article-title" href="{% url 'post-detail' post.id %}"> {{ post.title }} </a></h2>
-            <p class="article-content"> {{ post.content }} </p>
+
+            <div class="d-flex">
+                <a class="btn btn-primary" href="{% url 'post-detail' post.id %}">Add Comment</a>
+            </div>
         </div>
     </article>
+    
 {% endfor %}
 
 {% if is_paginated %}
