@@ -58,10 +58,7 @@
 
     <script>
         function toggleLike(postId){
-            console.log('Post ID:', postId); 
-            console.log('Post ID:', postId); 
             const url = `/blog/post/${postId}/like/`;
-            console.log('Requesting:', url);
             fetch(url , {
                 method: 'POST',
                 headers: {
@@ -77,17 +74,11 @@
                 return res.json();
             })
             .then(data =>{
-                console.log('Response from server:', data);
-                console.log("Server responded:", data);
                 const btn = document.getElementById(`likeBtn-${postId}`);
                 const icon = document.getElementById(`likeIcon-${postId}`);
                 const countSpan = document.getElementById(`likeCount-${postId}`);
 
                 countSpan.textContent = data.like_count;
-
-                console.log('btn:', btn);
-                console.log('icon:', icon);
-                console.log('countSpan:', countSpan);
 
                 if(data.liked){
                     btn.classList.remove('btn-outline-secondary');

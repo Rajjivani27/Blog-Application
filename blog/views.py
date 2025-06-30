@@ -156,13 +156,9 @@ class LikeToggleView(LoginRequiredMixin,View):
         liked = False
         if request.user in post.likes.all():
             post.likes.remove(request.user)
-            print(f'Removed like from {request.user} for post {post.id}')
         else:
             post.likes.add(request.user)
-            print(f'Added like to {request.user} for post {post.id}')
             liked = True
-
-        print(f'Total Likes:', post.likes.count())
 
         return JsonResponse({
             'liked':liked,
