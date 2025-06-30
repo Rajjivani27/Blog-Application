@@ -17,9 +17,9 @@
             </div>
 
             <div class="d-flex">
-                <button id="likeBtn-{{post.id}}" class="btn btn-outline-secondary like-btn" onclick="console.log( '{{ post.id }}' )">
-                    <i id="likeIcon-{{post.id}}" class="bi bi-hand-thumbs-up"></i>
-                    <span id="likeCount-{{post.id}}">{{ post.likes.count }}</span>
+                <button id="likeBtn-{{ post.id }}" class="btn btn-outline-secondary" onclick="toggleLike( '{{ post.id }}' )">
+                    <i id="likeIcon-{{ post.id }}" class="bi bi-hand-thumbs-up"></i>
+                    <span id="likeCount-{{ post.id }}">{{ post.likes.count }}</span>
                 </button>
                 <a class="btn btn-primary ms-2" href="{% url 'post-detail' post.id %}">Add Comment</a>
             </div>
@@ -59,7 +59,10 @@
     <script>
         function toggleLike(postId){
             console.log('Post ID:', postId); 
-            fetch(`/post/${postId}/like/` , {
+            console.log('Post ID:', postId); 
+            const url = `/blog/post/${postId}/like/`;
+            console.log('Requesting:', url);
+            fetch(url , {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': getCookie('csrftoken'),
@@ -69,24 +72,30 @@
             })
             .then(res => {
                 if(!res.ok){
-                    throw new error (`HTTP Status ${res.status}`);
+                     throw new Error(`HTTP Status ${res.status}`);
                 }
                 return res.json();
             })
             .then(data =>{
+                console.log('Response from server:', data);
+                console.log("Server responded:", data);
                 const btn = document.getElementById(`likeBtn-${postId}`);
                 const icon = document.getElementById(`likeIcon-${postId}`);
                 const countSpan = document.getElementById(`likeCount-${postId}`);
 
                 countSpan.textContent = data.like_count;
 
+                console.log('btn:', btn);
+                console.log('icon:', icon);
+                console.log('countSpan:', countSpan);
+
                 if(data.liked){
                     btn.classList.remove('btn-outline-secondary');
-                    btn.classList.add('btn-secondary');
+                    btn.classList.add('btn-primary');
                     icon.className = 'bi bi-hand-thumbs-up-fill';
                 }
                 else{
-                    btn.classList.remove('btn-secondary');
+                    btn.classList.remove('btn-primary');
                     btn.classList.add('btn-outline-secondary')
                     icon.className = 'bi bi-hand-thumbs-up'
                 }
