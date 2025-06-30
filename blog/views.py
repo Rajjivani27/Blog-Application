@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.core.paginator import Paginator
 from .models import *
 from django.db.models import Q
@@ -14,6 +14,7 @@ from .utils import send_verification_email
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from .tokens import email_verification_token
+from django.views import View
 
 #View for Registering new user
 def register_page(request):
@@ -147,6 +148,28 @@ class CommentDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
         context['post'] = post
         return context
     
+class LikeToggleView(LoginRequiredMixin,View):
+    def post(self,request,pk):
+        post = get_object_or_404(Posts,pk=pk)
+        print(post.id)
+
+        liked = False
+        if request.user in post.likes.all():
+            post.likes.remove(request.user)
+            print(f'Removed like from {request.user} for post {post.id}')
+        else:
+            post.likes.add(request.user)
+            print(f'Added like to {request.user} for post {post.id}')
+            liked = True
+
+        print(f'Total Likes:', post.likes.count())
+
+        return JsonResponse({
+            'liked':liked,
+            'like_count':post.total_likes()
+        })
+
+
 
 def about(request):
     return render(request,'blog/about.html',{'title':'About'})

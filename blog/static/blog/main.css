@@ -89,3 +89,12 @@ a.article-title:hover {
 .account-heading {
   font-size: 2.5rem;
 }
+
+.like-btn{
+  cursor: pointer;
+}
+
+.like-btn.clicked{
+  background-color: blue !important;
+  color: white;
+}
