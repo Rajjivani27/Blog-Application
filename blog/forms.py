@@ -32,3 +32,4 @@ class CommentForm(forms.ModelForm):
                 'placeholder':'Write a comment...'
             })
         }
+

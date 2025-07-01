@@ -8,7 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from .forms import UserRegisterForm,UserUpdateForm,CommentForm
 from django.contrib.auth.forms import UserCreationForm 
-from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
+from django.contrib.auth.views import LogoutView
+from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from .utils import send_verification_email
 from django.utils.http import urlsafe_base64_decode
@@ -60,6 +61,26 @@ class UserPostListView(ListView):
         user = get_object_or_404(CustomUser,username = self.kwargs.get('username'))
         context['user_profile'] = user
         return context
+    
+class UserLikedPostView(ListView):
+    model = Posts
+    template_name = 'blog/user_liked_posts.html'
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        user = get_object_or_404(CustomUser,username = self.kwargs.get('username'))
+        return user.liked_posts.all().order_by('-date_posted')
+    
+class UserCommentedPostsView(ListView):
+    model = Posts
+    template_name = 'blog/user_commented_posts.html'
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        user = get_object_or_404(CustomUser,username = self.kwargs.get('username'))
+        return Posts.objects.filter(post_comments__author = user).order_by('-date_posted')
 
 
 class PostDetailView(DetailView):
@@ -187,9 +208,14 @@ def profile(request):
     }
     return render(request,'blog/profile.html',context)
 
-def logoutView(request):
-    logout(request)
-    return redirect('/blog/login/')
+
+class LogoutConfirmView(TemplateView):
+    template_name = 'blog/logout.html'
+
+class LogOutView(LogoutView):
+    http_method_names = ['post']
+    next_page = 'blog-login'
+            
 
 def verify_email_done(request):
     return render(request,'blog/verify_email_done.html')
