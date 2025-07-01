@@ -45,8 +45,8 @@ class Posts(models.Model):
         return self.title
     
 class Comments(models.Model):
-    post = models.ForeignKey(Posts,on_delete=models.CASCADE)
-    author = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    post = models.ForeignKey(Posts,related_name="post_comments",on_delete=models.CASCADE)
+    author = models.ForeignKey(CustomUser,related_name="user_comment",on_delete=models.CASCADE)
     content = models.CharField()
     created_at = models.DateTimeField(default=timezone.now)
 
