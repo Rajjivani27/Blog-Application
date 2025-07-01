@@ -17,6 +17,33 @@
         {% endif %}
     </head>
     <body>
+        <input type="checkbox" id="drawer-toggle" hidden>
+        <div class="side-drawer bg-steel text-white p-4">
+            {% if user.is_authenticated %}
+                <h5 class="mb-4 text-white">Hello, {{ user.username }}</h5>
+                <a class="d-block text-white mb-2" href="{% url 'post-create' %}">New Post</a>
+                <a class="d-block text-white mb-2" href="{% url 'blog-profile' %}">{{ user.username }}</a>
+
+                <input type="checkbox" id="activity-options-toggle" hidden>
+                <label for="activity-options-toggle" class="btn btn-outline-secondary w-100 text-start">
+                    Your Activity ▼
+                </label>
+                
+                <div class="dropdown-menu show w-100 mt-2" style="display: none;" id="activity-options">
+                    <a class="dropdown-item" href="{% url 'user-liked-posts' user.username %}">Liked Blogs</a>
+                    <a class="dropdown-item" href="{% url 'user-commented-posts' user.username %}">Commented Blogs</a>
+                </div>
+
+                <a class="d-block text-white mb-2" href="{% url 'logout-confirm' %}">Logout</a>
+            {% else %}
+                <h5 class="mb-4">Welcome!</h5>
+                <a class="d-block text-white mb-2" href="#">Login</a>
+                <a class="d-block text-white mb-2" href="#">Register</a>
+            {% endif %}
+        </div>
+
+        <label for="drawer-toggle" class="overlay"></label>
+
         <header class="site-header">
             <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
                 <div class="container">
@@ -31,19 +58,13 @@
                     </div>
                 </div>
                 
-                {% if request.user.is_authenticated %}'
-                    <div class="ml-auto navbar-nav">
-                        <a class="nav-item nav-link" href="{% url 'post-create' %}">New Post</a>
-                        <a class="nav-item nav-link" href="{% url 'blog-profile' %}">{{ user.username }}</a>
-                        <a href="{% url 'blog-logout' %}" class="btn btn-danger">Logout</a>
-                    </div>
-                {% else %}
-                    <div class="ml-auto navbar-nav">
-                        <a class="nav-item nav-link" href="{% url 'blog-login' %}">Login</a>
-                        <a class="nav-item nav-link" href="{% url 'blog-register' %}">Register</a>
-                    </div>
-                {% endif %}
-            
+                
+                    <!-- Alternate class for below div- ml-auto navbar-nav -->
+                <div class="ms-auto"> 
+                    <label for="drawer-toggle" class="btn btn-outline-light">
+                        ☰
+                    </label>
+                </div>
                 </div>
             </nav>
         </header>
