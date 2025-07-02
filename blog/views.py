@@ -1,5 +1,7 @@
+import requests
+import google.generativeai as genai
 from django.shortcuts import render,redirect,get_object_or_404
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse,JsonResponse,HttpRequest
 from django.core.paginator import Paginator
 from .models import *
 from django.db.models import Q
@@ -16,6 +18,17 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from .tokens import email_verification_token
 from django.views import View
+from BlogProject import settings
+
+
+#Configuring GEMINI SDK
+genai.configure(api_key=settings.GOOGLE_API_KEY)
+
+#Creating a Persistent model instance
+model = genai.GenerativeModel('gemini-1.5-flash')
+
+#for storing chat histroy(only for now)
+chat_session = model.start_chat(history=[])
 
 #View for Registering new user
 def register_page(request):
@@ -117,6 +130,18 @@ class PostCreateView(LoginRequiredMixin,CreateView):
     success_url = "/blog/home/"
 
     def form_valid(self,form):
+        title = form.cleaned_data['title']
+        content = form.cleaned_data['content']
+
+        question_to_ask = "Give answer in only one word, YES or NO, is the title or content is abusive or vulgur?"
+        message = title + " " + content + "\n" + question_to_ask
+
+        response = chat_session.send_message(message)
+        print(response.text)
+
+        if response.text == 'YES\n':
+            messages.error(self.request,"Your post contains very vulgur and abusive langauge, please update it!!")
+            return redirect('post-create')
         form.instance.author = self.request.user
         return super().form_valid(form)
     
@@ -234,8 +259,4 @@ def verify_email_confirm(request,uidb64,token):
         return render(request,'blog/verify_email_confirm.html')
     else:
         return HttpResponse("Invalid or expired verification link")
-
-
-
-
 # Create your views here.
