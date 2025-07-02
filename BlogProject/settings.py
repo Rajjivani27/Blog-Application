@@ -145,3 +145,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_USER_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+
+if not GOOGLE_API_KEY:
+    print("Its not here")
+else:
+    print("Its here")
