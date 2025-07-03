@@ -13,7 +13,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LogoutView
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
-from .utils import send_verification_email
+from .utils import *
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from .tokens import email_verification_token
@@ -133,17 +133,32 @@ class PostCreateView(LoginRequiredMixin,CreateView):
         title = form.cleaned_data['title']
         content = form.cleaned_data['content']
 
-        question_to_ask = "Give answer in only one word, YES or NO, is the title or content is abusive or vulgur?"
-        message = title + " " + content + "\n" + question_to_ask
+        abusive_words =  abuse_detector(title,content,chat_session)
+        print(abusive_words)
 
-        response = chat_session.send_message(message)
-        print(response.text)
+        if abusive_words:
+            highlighted_title = highlight_abusive_words(title,abusive_words)
+            highlighted_content = highlight_abusive_words(content,abusive_words)
 
-        if response.text == 'YES\n':
-            messages.error(self.request,"Your post contains very vulgur and abusive langauge, please update it!!")
-            return redirect('post-create')
+            form.add_error('title',mark_safe(f"Detected abusive or vulgur words highighted below. Please remove them"))
+            form.add_error('content',mark_safe(f"Detected abusive or vulgur words highighted below. Please remove them"))
+
+            self.highlighted_preview = {
+                'title' : mark_safe(highlighted_title),
+                'content': mark_safe(highlighted_content)
+            }
+
+            return self.form_invalid(form)
+        
+
         form.instance.author = self.request.user
         return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        if hasattr(self,'highlighted_preview'):
+            response.context_data['highlighted_preview'] = self.highlighted_preview
+        return response
     
 class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model = Posts
