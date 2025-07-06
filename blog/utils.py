@@ -27,7 +27,7 @@ def send_verification_email(user,request):
     )
 
 def abuse_detector(title,content,chat_session):
-    question_to_ask = "Detect the abusive or vulgur words in above text ignoring lighter words like stupid,idiot,rude and filter other on your own. Give message containing only abusive or vulgur words with all letters in lower case no other things and if no abusive text then just send an empty line"
+    question_to_ask = "Detect the abusive or vulgur words in above text. Give message containing only abusive or vulgur words with all letters in lower case no other things and if no abusive text then just send an empty line"
     message = title + " " + content + "\n" + question_to_ask
 
     response = chat_session.send_message(message)

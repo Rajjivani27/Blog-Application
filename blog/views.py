@@ -140,8 +140,8 @@ class PostCreateView(LoginRequiredMixin,CreateView):
             highlighted_title = highlight_abusive_words(title,abusive_words)
             highlighted_content = highlight_abusive_words(content,abusive_words)
 
-            form.add_error('title',mark_safe(f"Detected abusive or vulgur words highighted below. Please remove them"))
-            form.add_error('content',mark_safe(f"Detected abusive or vulgur words highighted below. Please remove them"))
+            form.add_error('title',mark_safe(f"Detected offensive words highighted above. Please remove them"))
+            form.add_error('content',mark_safe(f"Detected offensive words highighted above. Please remove them"))
 
             self.highlighted_preview = {
                 'title' : mark_safe(highlighted_title),
