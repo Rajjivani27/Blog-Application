@@ -9,7 +9,7 @@ class PostsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Posts
         fields = ['id','title','content','date_posted','author','likes_count','is_liked_by_user']
-
+    
     def get_author(self,obj):
         return obj.author.username
     

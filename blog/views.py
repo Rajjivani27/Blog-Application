@@ -24,6 +24,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import generics,filters
 from rest_framework.response import Response
 from .serializers import PostsSerializer
+from rest_framework.pagination import LimitOffsetPagination
 
 
 #Configuring GEMINI SDK
@@ -44,10 +45,12 @@ class PostListAPI(generics.ListCreateAPIView):
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['date_posted','id']
     ordering = ['-date_posted']
+    pagination_class = LimitOffsetPagination
 
     def list(self,request):
+        context = {'request':request}
         queryset = self.filter_queryset(self.get_queryset())
-        serializer = PostsSerializer(queryset,many=True)
+        serializer = PostsSerializer(queryset,many=True,context=context)
         return Response(serializer.data)
 
     def get_serializer_context(self):
