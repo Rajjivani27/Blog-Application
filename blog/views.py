@@ -19,6 +19,11 @@ from django.utils.encoding import force_str
 from .tokens import email_verification_token
 from django.views import View
 from BlogProject import settings
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+from rest_framework import generics,filters
+from rest_framework.response import Response
+from .serializers import PostsSerializer
 
 
 #Configuring GEMINI SDK
@@ -29,6 +34,24 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 
 #for storing chat histroy(only for now)
 chat_session = model.start_chat(history=[])
+
+class PostListAPI(generics.ListCreateAPIView):
+    """
+    This is API view for PostLists
+    """
+    queryset = Posts.objects.all()
+    serializer_class = PostsSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['date_posted','id']
+    ordering = ['-date_posted']
+
+    def list(self,request):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = PostsSerializer(queryset,many=True)
+        return Response(serializer.data)
+
+    def get_serializer_context(self):
+        return {'request': self.request}
 
 #View for Registering new user
 def register_page(request):

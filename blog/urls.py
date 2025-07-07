@@ -24,4 +24,5 @@ urlpatterns = [
     path('profile/',profile,name="blog-profile"),
     path('logout/confirm/',LogoutConfirmView.as_view(),name="logout-confirm"),
     path('logout/',LogOutView.as_view(),name="blog-logout"),
+    path('post-list-api/',PostListAPI.as_view(),name="post_list_api"),
 ] + static(settings.STATIC_URL,document_root = settings.STATIC_ROOT) 
