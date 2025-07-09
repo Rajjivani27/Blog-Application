@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-slqprls%j6$r=np%9(a0o0=k@w_2!wsib1&uu7ha51dx)h@p0=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'blog.CustomUser'
 

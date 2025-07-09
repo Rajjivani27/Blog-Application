@@ -21,10 +21,12 @@ from django.views import View
 from BlogProject import settings
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from rest_framework import generics,filters
+from rest_framework import generics,filters,status
 from rest_framework.response import Response
-from .serializers import PostsSerializer
+from .serializers import PostsSerializer,PostCreateSerializer
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 
 #Configuring GEMINI SDK
@@ -55,6 +57,15 @@ class PostListAPI(generics.ListCreateAPIView):
 
     def get_serializer_context(self):
         return {'request': self.request}
+    
+class PostCreateAPI(generics.CreateAPIView):
+    queryset = Posts.objects.all()
+    serializer_class = PostCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
 
 #View for Registering new user
 def register_page(request):
