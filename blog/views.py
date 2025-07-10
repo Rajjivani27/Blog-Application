@@ -27,7 +27,7 @@ from .serializers import PostsSerializer,PostCreateSerializer
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.mixins import DestroyModelMixin,CreateModelMixin,RetrieveModelMixin
 
 #Configuring GEMINI SDK
 genai.configure(api_key=settings.GOOGLE_API_KEY)
@@ -63,6 +63,28 @@ class PostCreateAPI(generics.CreateAPIView):
     serializer_class = PostCreateSerializer
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+class PostDetailAPI(RetrieveModelMixin,DestroyModelMixin,CreateModelMixin,generics.GenericAPIView):
+    queryset = Posts.objects.all()
+    serializer_class = PostsSerializer
+    lookup_field = 'pk'
+    permission_classes = [IsAuthenticated]
+
+    def post(self,request,*args,**kwargs):
+        return self.create(request,*args,**kwargs)
+
+    def get(self,request,*args,**kwargs):
+        return self.retrieve(request,*args,*kwargs)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
+    def delete(self,request,*args,**kwargs):
+        obj = self.get_object()
+        return self.destroy(request,*args,**kwargs)
+    
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 

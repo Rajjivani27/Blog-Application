@@ -26,4 +26,5 @@ urlpatterns = [
     path('logout/',LogOutView.as_view(),name="blog-logout"),
     path('post-list-api/',PostListAPI.as_view(),name="post_list_api"),
     path('post_create_api/',PostCreateAPI.as_view(),name="post-create-api"),
+    path('post_delete_api/<int:pk>/',PostDetailAPI.as_view(),name="post-delete-api"),
 ] + static(settings.STATIC_URL,document_root = settings.STATIC_ROOT) 
