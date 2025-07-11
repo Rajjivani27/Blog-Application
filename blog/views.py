@@ -23,7 +23,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from rest_framework import generics,filters,status
 from rest_framework.response import Response
-from .serializers import PostsSerializer,PostCreateSerializer
+from .serializers import PostsSerializer,PostCreateSerializer,CustomUserSerializer
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -87,6 +87,13 @@ class PostDetailAPI(RetrieveModelMixin,DestroyModelMixin,CreateModelMixin,generi
     
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+class CustomUserAPI(generics.CreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+    def get_serializer_context(self):
+        return {'request':self.request}
 
 
 #View for Registering new user
@@ -321,6 +328,7 @@ def verify_email_done(request):
 
 def verify_email_confirm(request,uidb64,token):
     try:
+        print('I have reached Here')
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = CustomUser.objects.get(pk=uid)
     except(TypeError,ValueError,OverflowError,CustomUser.DoesNotExist):

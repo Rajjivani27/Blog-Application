@@ -27,4 +27,5 @@ urlpatterns = [
     path('post-list-api/',PostListAPI.as_view(),name="post_list_api"),
     path('post_create_api/',PostCreateAPI.as_view(),name="post-create-api"),
     path('post_delete_api/<int:pk>/',PostDetailAPI.as_view(),name="post-delete-api"),
+    path('user_register_api/',CustomUserAPI.as_view(),name="user-register-api"),
 ] + static(settings.STATIC_URL,document_root = settings.STATIC_ROOT) 
