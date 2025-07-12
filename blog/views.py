@@ -28,6 +28,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.mixins import DestroyModelMixin,CreateModelMixin,RetrieveModelMixin
+from rest_framework.authtoken.models import Token
+
 
 #Configuring GEMINI SDK
 genai.configure(api_key=settings.GOOGLE_API_KEY)
@@ -89,11 +91,34 @@ class PostDetailAPI(RetrieveModelMixin,DestroyModelMixin,CreateModelMixin,generi
         serializer.save(author=self.request.user)
 
 class CustomUserAPI(generics.CreateAPIView):
-    queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+
+    def create(self, request, *args, **kwargs):
+        print("Request Data", request.data)
+
+        serializer = self.get_serializer(data = request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response(request.data,status=status.HTTP_200_OK)
+        else:
+            print("Error",serializer.errors)
+
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
     def get_serializer_context(self):
         return {'request':self.request}
+    
+class LoginAPI(APIView):
+    def post(self,request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = authenticate(request,username=email,password=password)
+
+        if user is not None:
+            token,_ = Token.objects.get_or_create(user=user)
+            return Response({'tokne':token.key},status=status.HTTP_200_OK)
+        else:
+            return Response({'error':'Invalid Credentials'},status=status.HTTP_401_UNAUTHORIZED)
 
 
 #View for Registering new user
