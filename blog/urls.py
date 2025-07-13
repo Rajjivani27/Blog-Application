@@ -29,4 +29,5 @@ urlpatterns = [
     path('post_delete_api/<int:pk>/',PostDetailAPI.as_view(),name="post-delete-api"),
     path('user_register_api/',CustomUserAPI.as_view(),name="user-register-api"),
     path('login_api/',LoginAPI.as_view(),name="login-api"),
+    path('who_am_i_api/',WhoAmIAPI.as_view(),name="who-am-i-api")
 ] + static(settings.STATIC_URL,document_root = settings.STATIC_ROOT) 

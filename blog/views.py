@@ -27,7 +27,7 @@ from .serializers import PostsSerializer,PostCreateSerializer,CustomUserSerializ
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.mixins import DestroyModelMixin,CreateModelMixin,RetrieveModelMixin
+from rest_framework.mixins import DestroyModelMixin,CreateModelMixin,RetrieveModelMixin,ListModelMixin
 from rest_framework.authtoken.models import Token
 
 
@@ -108,6 +108,22 @@ class CustomUserAPI(generics.CreateAPIView):
     def get_serializer_context(self):
         return {'request':self.request}
     
+class WhoAmIAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        user = request.user
+
+        response = Response(
+                    {
+                    'id': user.id,
+                    'email': user.email,
+                    'username': user.username,
+                    }
+                )
+
+        return response
+    
 class LoginAPI(APIView):
     def post(self,request):
         email = request.data.get('email')
@@ -116,9 +132,14 @@ class LoginAPI(APIView):
 
         if user is not None:
             token,_ = Token.objects.get_or_create(user=user)
-            return Response({'tokne':token.key},status=status.HTTP_200_OK)
+            response = Response({'token':token.key},status=status.HTTP_200_OK)
+            print(token,_)
+            print(response)
+            return response
         else:
-            return Response({'error':'Invalid Credentials'},status=status.HTTP_401_UNAUTHORIZED)
+            response = Response({'error':'Invalid Credentials'},status=status.HTTP_401_UNAUTHORIZED)
+            print(response)
+            return response
 
 
 #View for Registering new user
