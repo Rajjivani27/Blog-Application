@@ -141,6 +141,13 @@ class LoginAPI(APIView):
             print(response)
             return response
 
+class LogoutAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self,request):
+        request.user.auth_token.delete()
+        return Response({"message":"Successfully Logged out"},status=status.HTTP_200_OK)
+
 
 #View for Registering new user
 def register_page(request):
