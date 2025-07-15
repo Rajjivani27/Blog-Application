@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Posts,CustomUser
+from .models import Posts,CustomUser,Comments
 from .utils import send_verification_email
 
 class PostsSerializer(serializers.ModelSerializer):
@@ -60,3 +60,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
         user.save()
         send_verification_email(user,self.context['request'])
         return user
+    
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comments
+        fields = ['post','autor','content']

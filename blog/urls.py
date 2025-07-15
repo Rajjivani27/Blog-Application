@@ -28,6 +28,7 @@ urlpatterns = [
     path('post_create_api/',PostCreateAPI.as_view(),name="post-create-api"),
     path('post_delete_api/<int:pk>/',PostDetailAPI.as_view(),name="post-delete-api"),
     path('user_register_api/',CustomUserAPI.as_view(),name="user-register-api"),
+    path('comment_list_api/',CommentListApi.as_view(),name="comment-list-api"),
     path('login_api/',LoginAPI.as_view(),name="login-api"),
     path('logout_api/',LogoutAPI.as_view(),name="logout-api"),
     path('who_am_i_api/',WhoAmIAPI.as_view(),name="who-am-i-api"),

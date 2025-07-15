@@ -23,12 +23,13 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from rest_framework import generics,filters,status
 from rest_framework.response import Response
-from .serializers import PostsSerializer,PostCreateSerializer,CustomUserSerializer
+from .serializers import PostsSerializer,PostCreateSerializer,CustomUserSerializer,CommentSerializer
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.mixins import DestroyModelMixin,CreateModelMixin,RetrieveModelMixin,ListModelMixin
 from rest_framework.authtoken.models import Token
+from .permissions import IsAuthorOrReadOnly
 
 
 #Configuring GEMINI SDK
@@ -72,7 +73,7 @@ class PostDetailAPI(RetrieveModelMixin,DestroyModelMixin,CreateModelMixin,generi
     queryset = Posts.objects.all()
     serializer_class = PostsSerializer
     lookup_field = 'pk'
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthorOrReadOnly]
 
     def post(self,request,*args,**kwargs):
         return self.create(request,*args,**kwargs)
@@ -123,6 +124,15 @@ class WhoAmIAPI(APIView):
                 )
 
         return response
+    
+class CommentListApi(generics.ListAPIView):
+    queryset = Comments.objects.all()
+    serializer_class = CommentSerializer
+
+    def list(self,request):
+        context = {'request':request}
+        serializer = PostsSerializer(queryset,many=True,context=context)
+        return Response(serializer.data)
     
 class LoginAPI(APIView):
     def post(self,request):
