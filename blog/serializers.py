@@ -62,6 +62,22 @@ class CustomUserSerializer(serializers.ModelSerializer):
         return user
     
 class CommentSerializer(serializers.ModelSerializer):
+    post = serializers.SerializerMethodField()
+    author = serializers.SerializerMethodField()
     class Meta:
         model = Comments
-        fields = ['post','autor','content']
+        fields = ['id','post','author','content','created_at']
+
+    def get_post(self,obj):
+        return {
+            'id': obj.post.id,
+            'title':obj.post.title
+        }
+    
+    def get_author(self,obj):
+        return {
+            'id':obj.author.id,
+            'username':obj.author.username
+        }
+
+    

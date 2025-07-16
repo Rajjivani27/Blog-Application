@@ -29,7 +29,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.mixins import DestroyModelMixin,CreateModelMixin,RetrieveModelMixin,ListModelMixin
 from rest_framework.authtoken.models import Token
-from .permissions import IsAuthorOrReadOnly
+from .permissions import IsAuthorOrReadOnly,IsAuthor
+from rest_framework import viewsets,permissions
 
 
 #Configuring GEMINI SDK
@@ -130,8 +131,9 @@ class CommentListApi(generics.ListAPIView):
     serializer_class = CommentSerializer
 
     def list(self,request):
+        queryset = self.get_queryset()
         context = {'request':request}
-        serializer = PostsSerializer(queryset,many=True,context=context)
+        serializer = CommentSerializer(queryset,many=True,context=context)
         return Response(serializer.data)
     
 class LoginAPI(APIView):
