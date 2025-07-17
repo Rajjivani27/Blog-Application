@@ -136,6 +136,20 @@ class CommentListApi(generics.ListAPIView):
         serializer = CommentSerializer(queryset,many=True,context=context)
         return Response(serializer.data)
     
+class SecificPostsCommentsAPI(ListModelMixin,generics.GenericAPIView):
+    queryset = Comments.objects.all()
+    serializer_class = CommentSerializer
+
+    def list(self, request, *args, **kwargs):
+        post_id = self.kwargs.get('pk')
+        queryset = self.get_queryset()
+        queryset = queryset.filter(post_id = post_id)
+        serializer = CommentSerializer(queryset,many=True)
+        return Response(serializer.data)
+
+    def get(self,request,*args,**kwargs):
+        return self.list(request,*args,**kwargs)
+    
 class LoginAPI(APIView):
     def post(self,request):
         email = request.data.get('email')

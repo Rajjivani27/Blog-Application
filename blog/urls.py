@@ -3,6 +3,10 @@ from .views import *
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.auth import views as auth_views
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 
 urlpatterns = [
@@ -29,7 +33,10 @@ urlpatterns = [
     path('post_delete_api/<int:pk>/',PostDetailAPI.as_view(),name="post-delete-api"),
     path('user_register_api/',CustomUserAPI.as_view(),name="user-register-api"),
     path('comment_list_api/',CommentListApi.as_view(),name="comment-list-api"),
+    path('comments_of_post/<int:pk>/',SecificPostsCommentsAPI.as_view(),name="comments-on-post"),
     path('login_api/',LoginAPI.as_view(),name="login-api"),
     path('logout_api/',LogoutAPI.as_view(),name="logout-api"),
     path('who_am_i_api/',WhoAmIAPI.as_view(),name="who-am-i-api"),
+    path('api/token/',TokenObtainPairView.as_view(),name="token_obtain_pair"),
+    path('api/token/refresh/',TokenRefreshView.as_view(),name="token_refresh"),
 ] + static(settings.STATIC_URL,document_root = settings.STATIC_ROOT) 
