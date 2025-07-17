@@ -31,6 +31,7 @@ from rest_framework.mixins import DestroyModelMixin,CreateModelMixin,RetrieveMod
 from rest_framework.authtoken.models import Token
 from .permissions import IsAuthorOrReadOnly,IsAuthor
 from rest_framework import viewsets,permissions
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 #Configuring GEMINI SDK
@@ -171,8 +172,13 @@ class LogoutAPI(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self,request):
-        request.user.auth_token.delete()
-        return Response({"message":"Successfully Logged out"},status=status.HTTP_200_OK)
+        try:
+            refresh_token = request.data.get("refresh")
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({"message":"Successfully Logged out"},status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error":str(e)},status=status.HTTP_400_BAD_REQUEST)
 
 
 #View for Registering new user
