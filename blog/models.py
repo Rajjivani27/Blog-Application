@@ -36,7 +36,6 @@ class Posts(models.Model):
     content = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-    post_image = models.ImageField(blank=True,null=True)
     likes = models.ManyToManyField(CustomUser,related_name='liked_posts',blank=True)
 
     def total_likes(self):
@@ -44,6 +43,10 @@ class Posts(models.Model):
     
     def __str__(self):
         return self.title
+    
+class PostImages(models.Model):
+    post = models.ForeignKey(Posts,on_delete=models.CASCADE,related_name="images")
+    image = models.ImageField(upload_to="post_images/",null=True,blank=True)
     
 class Comments(models.Model):
     post = models.ForeignKey(Posts,related_name="post_comments",on_delete=models.CASCADE)

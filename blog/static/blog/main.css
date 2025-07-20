@@ -12,6 +12,18 @@ body {
     border-radius: 8px;
 }
 
+.gallery {
+  column-count: 2;
+  column-gap: 16px;
+}
+
+.gallery img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+
 h1, h2, h3, h4, h5, h6 {
   color: #444444;
 }
