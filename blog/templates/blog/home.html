@@ -14,7 +14,7 @@
                     <h2><a class="article-title" href="{% url 'post-detail' post.id %}"> {{ post.title }} </a></h2>
                     <p class="article-content"> {{ post.content }} </p>
                     <!-- Image Preview Section -->
-                    {% with post.images.all as images %}
+                    {% with post.media.all as images %}
                         <div class="d-flex gap-2 mb-3">
                             {% for image in images|slice:":2" %}
                                 <div class="position-relative w-50"
@@ -24,7 +24,7 @@
                                     data-post-id="{{ post.id }}"
                                     data-index="{{ forloop.counter0 }}"
                                     onclick="openSlide(this)">
-                                    <img src="{{ image.image.url }}" class="img-fluid w-100 h-100 object-fit-cover rounded" alt="Post Image">
+                                    <img src="{{ image.files.url }}" class="img-fluid w-100 h-100 object-fit-cover rounded" alt="Post Image">
 
                                     {% if forloop.counter == 2 and images|length > 2 %}
                                         <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center rounded">
@@ -44,9 +44,9 @@
                                 <div class="modal-body p-0">
                                     <div id="carousel{{ post.id }}" class="carousel slide" data-bs-ride="carousel">
                                         <div class="carousel-inner">
-                                            {% for image in post.images.all %}
+                                            {% for image in post.media.all %}
                                             <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                                <img src="{{ image.image.url }}" class="d-block w-100" style="max-height: 80vh; object-fit: contain;">
+                                                <img src="{{ image.files.url }}" class="d-block w-100" style="max-height: 80vh; object-fit: contain;">
                                             </div>
                                             {% endfor %}
                                         </div>

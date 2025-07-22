@@ -44,9 +44,9 @@ class Posts(models.Model):
     def __str__(self):
         return self.title
     
-class PostImages(models.Model):
-    post = models.ForeignKey(Posts,on_delete=models.CASCADE,related_name="images")
-    image = models.ImageField(upload_to="post_images/",null=True,blank=True)
+class PostMedia(models.Model):
+    post = models.ForeignKey(Posts,on_delete=models.CASCADE,related_name="media")
+    files = models.FileField(upload_to="post_images/",null=True,blank=True)
     
 class Comments(models.Model):
     post = models.ForeignKey(Posts,related_name="post_comments",on_delete=models.CASCADE)

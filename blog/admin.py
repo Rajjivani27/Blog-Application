@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import *
 
 class PostImageInline(admin.TabularInline):
-    model = PostImages
+    model = PostMedia
     extra = 1
 
 class PostsAdmin(admin.ModelAdmin):
@@ -10,7 +10,7 @@ class PostsAdmin(admin.ModelAdmin):
 
 admin.site.register(CustomUser)
 admin.site.register(Posts,PostsAdmin)
-admin.site.register(PostImages)
+admin.site.register(PostMedia)
 admin.site.register(Comments)
 
 
