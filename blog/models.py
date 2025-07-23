@@ -48,7 +48,7 @@ class Posts(models.Model):
 class PostMedia(models.Model):
     post = models.ForeignKey(Posts,on_delete=models.CASCADE,related_name="media")
     files = models.FileField(
-        upload_to="post_images/",
+        upload_to="post_media/",
         null=True,
         blank=True,
         validators= [FileExtensionValidator(allowed_extensions=['jpg','jpeg','png','mp4','mov','webm'])]
