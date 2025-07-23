@@ -13,47 +13,49 @@
                     </div>
                     <h2><a class="article-title" href="{% url 'post-detail' post.id %}"> {{ post.title }} </a></h2>
                     <p class="article-content"> {{ post.content }} </p>
-                    <!-- Image Preview Section -->
-                    {% with post.media.all as images %}
-                        <div class="d-flex gap-2 mb-3">
-                            {% for image in images|slice:":2" %}
-                                <div class="position-relative w-50"
-                                    style="aspect-ratio: 1/1; overflow: hidden; border-radius: 8px; cursor: pointer;"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#galleryModal{{ post.id }}"
-                                    data-post-id="{{ post.id }}"
-                                    data-index="{{ forloop.counter0 }}"
-                                    onclick="openSlide(this)">
-                                    <img src="{{ image.files.url }}" class="img-fluid w-100 h-100 object-fit-cover rounded" alt="Post Image">
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for media in post.media.all %}
+                            <div class="position-relative" style="width: 48%; aspect-ratio: 1/1;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#mediaModal{{ post.id }}"
+                                data-index="{{ forloop.counter0 }}"
+                                onclick="openMediaSlide(this, {{ post.id }})">
+                                {% if media.file.url|lower endswith '.mp4' or media.file.url|lower endswith '.webm' %}
+                                    <video class="w-100 h-100 object-fit-cover rounded" muted>
+                                    <source src="{{ media.file.url }}" type="video/mp4">
+                                    </video>
+                                {% else %}
+                                    <img src="{{ media.file.url }}" class="w-100 h-100 object-fit-cover rounded">
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
 
-                                    {% if forloop.counter == 2 and images|length > 2 %}
-                                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center rounded">
-                                        <span class="text-white fw-bold fs-4">+{{ images|length|add:"-2" }}</span>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endwith %}
                     <!-- Bootstrap Modal for Full Image Gallery -->
                     <!-- Modal with Carousel for Full Gallery -->
                     <!-- Modal -->
-                    <div class="modal fade" id="galleryModal{{ post.id }}" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-xl">
-                            <div class="modal-content bg-dark text-white">
+                    <div class="modal fade" id="mediaModal{{ post.id }}" tabindex="-1">
+                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                            <div class="modal-content bg-dark">
                                 <div class="modal-body p-0">
-                                    <div id="carousel{{ post.id }}" class="carousel slide" data-bs-ride="carousel">
+                                    <div id="mediaCarousel{{ post.id }}" class="carousel slide" data-bs-ride="false">
                                         <div class="carousel-inner">
-                                            {% for image in post.media.all %}
+                                            {% for media in post.media.all %}
                                             <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                                <img src="{{ image.files.url }}" class="d-block w-100" style="max-height: 80vh; object-fit: contain;">
+                                                {% if media.file.url|lower endswith '.mp4' or media.file.url|lower endswith '.webm' %}
+                                                <video controls class="w-100" style="max-height: 90vh; object-fit: contain;">
+                                                    <source src="{{ media.file.url }}" type="video/mp4">
+                                                </video>
+                                                {% else %}
+                                                <img src="{{ media.file.url }}" class="d-block w-100" style="max-height: 90vh; object-fit: contain;">
+                                                {% endif %}
                                             </div>
                                             {% endfor %}
                                         </div>
-                                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ post.id }}" data-bs-slide="prev">
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#mediaCarousel{{ post.id }}" data-bs-slide="prev">
                                             <span class="carousel-control-prev-icon"></span>
                                         </button>
-                                        <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ post.id }}" data-bs-slide="next">
+                                        <button class="carousel-control-next" type="button" data-bs-target="#mediaCarousel{{ post.id }}" data-bs-slide="next">
                                             <span class="carousel-control-next-icon"></span>
                                         </button>
                                     </div>
@@ -159,13 +161,11 @@
             return cookieValue;
         }
 
-        function openSlide(element) {
-            const postId = element.getAttribute('data-post-id');
-            const index = parseInt(element.getAttribute('data-index'));
-
-            const carouselEl = document.getElementById(`carousel${postId}`);
-            const carousel = bootstrap.Carousel.getInstance(carouselEl) || new bootstrap.Carousel(carouselEl);
-            carousel.to(index);
+        function openMediaSlide(el, postId) {
+            const index = parseInt(el.dataset.index);
+            const carousel = document.querySelector(`#mediaCarousel${postId}`);
+            const bsCarousel = bootstrap.Carousel.getInstance(carousel) || new bootstrap.Carousel(carousel);
+            bsCarousel.to(index);
         }
     </script>
 
