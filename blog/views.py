@@ -283,6 +283,7 @@ class PostCreateView(LoginRequiredMixin,CreateView):
     def form_valid(self,form):
         title = form.cleaned_data['title']
         content = form.cleaned_data['content']
+        files = self.request.FILES.getlist('media_files')
 
         abusive_words =  abuse_detector(title,content,chat_session)
         print(abusive_words)
@@ -301,8 +302,11 @@ class PostCreateView(LoginRequiredMixin,CreateView):
 
             return self.form_invalid(form)
         
-
         form.instance.author = self.request.user
+        self.object = form.save()
+        for f in files:
+            PostMedia.objects.create(post=self.object,files=f)
+        
         return super().form_valid(form)
     
     def form_invalid(self, form):

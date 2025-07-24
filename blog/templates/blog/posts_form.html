@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="content-section">
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" class="p-4 border rounded bg-light shadow-sm">
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">Blog Post</legend>
@@ -23,11 +23,38 @@
             {% endif %}
 
             {{ form | crispy }}
+
+            <div class="mb-3">
+                <label for="media" class="form-label fw-semibold">Upload Media (Images/Videos)</label>
+                
+                <div id="media-inputs" class="d-flex form-column gap-2">
+                    <input type="file" name="media_files" id="media" accept="image/*,video/*" multiple class="form-control">
+                </div>
+                
+                <button type="button" class="btn btn-outline-secondary mt-2" onclick="addMediaInput()">+Add More</button>
+                <div class="form-text">
+                    You can select multiple images and videos at once.
+                </div>
+            </div>
+            
         </fieldset>
         <div class="form-group">
             <button class="btn btn-success" type="submit">Post</button>
         </div>
     </form>
 </div>
+
+<script>
+    function addMediaInput(){
+        const container = document.getElementById('media-inputs');
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.name = "media_files";
+        input.accept = "image/*,video/*";
+        input.multiple = true;
+        input.className = 'form-control';
+        container.appendChild(input)
+    }
+</script>
 
 {% endblock %}
