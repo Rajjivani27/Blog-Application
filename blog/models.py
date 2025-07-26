@@ -12,6 +12,13 @@ class CustomUser(AbstractUser):
     profile_pic = models.ImageField(default='default.jpg')
     user_bio = models.CharField(max_length=50,default=' ')
     dob = models.DateField(default="2000-01-01")
+    following = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        related_name="followers",
+        through='Follows',
+        through_fields=('follower','followed')
+    )
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -63,3 +70,8 @@ class Comments(models.Model):
 
     def __str__(self):
         return f'comment done on {self.post} by {self.author}'
+
+class Follows(models.Model):
+    follower = models.ForeignKey(CustomUser,related_name="follower_relation",on_delete=models.CASCADE)
+    followed = models.ForeignKey(CustomUser,related_name="following_relation",on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
