@@ -11,6 +11,8 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('home/',PostListView.as_view(),name="blog-home"),
+    path('follow/<int:user_id>/',follow_user,name="follow-user"),
+    path('unfollow_user/<int:user_id>/',unfollow_user,name="unfollow_user"),
     path('user/<str:username>/',UserPostListView.as_view(),name="user-posts"),
     path('user/<str:username>/liked/',UserLikedPostView.as_view(),name="user-liked-posts"),
     path('user/<str:username>/commented_posts/',UserCommentedPostsView.as_view(),name="user-commented-posts"),

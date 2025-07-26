@@ -430,4 +430,20 @@ def verify_email_confirm(request,uidb64,token):
         return render(request,'blog/verify_email_confirm.html')
     else:
         return HttpResponse("Invalid or expired verification link")
+    
+@login_required(login_url="blog-login")
+def follow_user(request,user_id):
+    target_user = get_object_or_404(CustomUser,id=user_id)
+
+    if not Follows.objects.filter(follower=request.user,followed=target_user).exists():
+        Follows.objects.create(follower=request.user,followed=target_user)
+
+    return redirect("user-posts",target_user.username)
+
+@login_required(login_url="blog-login")
+def unfollow_user(request,user_id):
+    target_user = get_object_or_404(CustomUser,id=user_id)
+    Follows.objects.filter(follower=request.user,followed=target_user).delete()
+    return redirect('user-posts',target_user.username)
+
 # Create your views here.
