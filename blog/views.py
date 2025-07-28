@@ -446,4 +446,9 @@ def unfollow_user(request,user_id):
     Follows.objects.filter(follower=request.user,followed=target_user).delete()
     return redirect('user-posts',target_user.username)
 
+def search(request):
+    if request.method == "POST":
+        searchItem = request.POST.get('search')
+    return render(request,"blog/search.html")
+
 # Create your views here.

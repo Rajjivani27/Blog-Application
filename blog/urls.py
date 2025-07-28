@@ -17,6 +17,7 @@ urlpatterns = [
     path('user/<str:username>/liked/',UserLikedPostView.as_view(),name="user-liked-posts"),
     path('user/<str:username>/commented_posts/',UserCommentedPostsView.as_view(),name="user-commented-posts"),
     path('about/',about,name="blog-about"),
+    path('search/',search,name="search"),
     path('login/',auth_views.LoginView.as_view(template_name = "blog/login.html"),name="blog-login"),
     path('register/',register_page,name="blog-register"),
     path('verify-email-done/',verify_email_done,name="verify_email_done"),
