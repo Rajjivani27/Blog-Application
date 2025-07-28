@@ -72,8 +72,8 @@ class Comments(models.Model):
         return f'comment done on {self.post} by {self.author}'
 
 class Follows(models.Model):
-    follower = models.ForeignKey(CustomUser,related_name="follower_relation",on_delete=models.CASCADE)
-    followed = models.ForeignKey(CustomUser,related_name="following_relation",on_delete=models.CASCADE)
+    follower = models.ForeignKey(CustomUser,related_name="following_relation",on_delete=models.CASCADE)
+    followed = models.ForeignKey(CustomUser,related_name="follower_relation",on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
