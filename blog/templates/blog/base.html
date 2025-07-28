@@ -37,8 +37,8 @@
                 <a class="d-block text-white mb-2" href="{% url 'logout-confirm' %}">Logout</a>
             {% else %}
                 <h5 class="mb-4">Welcome!</h5>
-                <a class="d-block text-white mb-2" href="#">Login</a>
-                <a class="d-block text-white mb-2" href="#">Register</a>
+                <a class="d-block text-white mb-2" href="{% url 'blog-login' %}">Login</a>
+                <a class="d-block text-white mb-2" href="{% url 'blog-register' %}">Register</a>
             {% endif %}
         </div>
 
@@ -55,6 +55,7 @@
                     <div class="navbar-nav mr-auto">
                         <a class="nav-item nav-link" href="{% url 'blog-home' %}">Home</a>
                         <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
+                        <a class="nav-item nav-link" href="{% url 'search' %}">Search</a>
                     </div>
                 </div>
                 

@@ -447,8 +447,20 @@ def unfollow_user(request,user_id):
     return redirect('user-posts',target_user.username)
 
 def search(request):
-    if request.method == "POST":
-        searchItem = request.POST.get('search')
-    return render(request,"blog/search.html")
+    users = []
+    posts = []
+    query = request.GET.get('q',' ')
+    result_type = request.GET.get('type')
+
+    if query:
+        if result_type == 'posts':
+            posts = Posts.objects.filter(title__icontains = query)
+        else:
+            result_type = 'users'
+            users = CustomUser.objects.filter(username__icontains = query)
+
+    context = {'users':users,'posts':posts,'q':query,'type':result_type}
+    return render(request,"blog/search.html",context=context)
+    
 
 # Create your views here.
