@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from dj_rest_auth.views import PasswordResetView,PasswordResetConfirmView
 
 
 urlpatterns = [
@@ -39,6 +40,8 @@ urlpatterns = [
     path('comments_of_post/<int:pk>/',SecificPostsCommentsAPI.as_view(),name="comments-on-post"),
     path('login_api/',LoginAPI.as_view(),name="login-api"),
     path('logout_api/',LogoutAPI.as_view(),name="logout-api"),
+    path('password_reset_api/',CustomPasswordResetView.as_view(),name="password_reset_api"),
+    path('reset_password_confirm/',PasswordResetConfirmView.as_view(),name="password-reset-confirm-api"),
     path('who_am_i_api/',WhoAmIAPI.as_view(),name="who-am-i-api"),
     path('api/token/',TokenObtainPairView.as_view(),name="token_obtain_pair"),
     path('api/token/refresh/',TokenRefreshView.as_view(),name="token_refresh"),

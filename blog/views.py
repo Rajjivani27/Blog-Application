@@ -1,4 +1,5 @@
 import requests
+from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView,PasswordResetConfirmView,PasswordResetCompleteView
 import google.generativeai as genai
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse,JsonResponse,HttpRequest
@@ -32,7 +33,7 @@ from rest_framework.authtoken.models import Token
 from .permissions import IsAuthorOrReadOnly,IsAuthor
 from rest_framework import viewsets,permissions
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from dj_rest_auth.views import PasswordResetView
 
 #Configuring GEMINI SDK
 genai.configure(api_key=settings.GOOGLE_API_KEY)
@@ -42,6 +43,12 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 
 #for storing chat histroy(only for now)
 chat_session = model.start_chat(history=[])
+
+class PasswordResetAPI(APIView,RetrieveModelMixin):
+    def get(self,request,*args,**kwargs):
+        PasswordResetView.as_view(template_name = "blog/password_reset.html")
+        return self.retrieve(request,*args,**kwargs)
+        
 
 class PostListAPI(generics.ListCreateAPIView):
     """
@@ -461,6 +468,13 @@ def search(request):
 
     context = {'users':users,'posts':posts,'q':query,'type':result_type}
     return render(request,"blog/search.html",context=context)
+
+class CustomPasswordResetView(PasswordResetView):
+    def get_serializer_context(self):
+        context =  super().get_serializer_context()
+        context['request'] = self.request._request
+        context['domain_override'] = '10.74.197.103:8000'
+        return context
     
 
 # Create your views here.

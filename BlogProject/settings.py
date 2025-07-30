@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'dj_rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -152,6 +153,8 @@ MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+
+PASSWORD_RESET_CONFIRM_URL = 'reset_password_confirm/{uid}/{token}'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
