@@ -14,7 +14,7 @@
                         {% if request.user in user_profile.followers.all %}
                             <a class="btn btn-secondary" href="{% url 'unfollow_user' user_profile.id %}">Unfollow</a>
                         {% else %}
-                            <a class="btn btn-primary" href="{% if request.user.is_authenticated %}{% url 'unfollow_user' user_profile.id %} {% else %} {% url 'blog-login' %}{% endif %}">Follow</a>
+                            <a class="btn btn-primary" href="{% if request.user.is_authenticated %}{% url 'follow-user' user_profile.id %} {% else %} {% url 'blog-login' %}{% endif %}">Follow</a>
                         {% endif %}
                     {% endif %}
                 </div>

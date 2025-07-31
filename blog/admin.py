@@ -12,6 +12,7 @@ admin.site.register(CustomUser)
 admin.site.register(Posts,PostsAdmin)
 admin.site.register(PostMedia)
 admin.site.register(Comments)
+admin.site.register(Follows)
 
 
 # Register your models here.
