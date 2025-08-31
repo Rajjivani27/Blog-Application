@@ -9,8 +9,8 @@ from django.core.validators import FileExtensionValidator
 
 class CustomUser(AbstractUser):
     email = models.EmailField(max_length=50,unique=True)
-    profile_pic = models.ImageField(default='default.jpg')
-    user_bio = models.CharField(max_length=50,default=' ')
+    profile_pic = models.ImageField(default='default.jpg',blank=True,null=True)
+    user_bio = models.CharField(max_length=50,default=' ',blank=True,null=True)
     dob = models.DateField(default="2000-01-01")
     following = models.ManyToManyField(
         'self',
